@@ -32,6 +32,8 @@ jobs:
           ls -l ..
           echo "find dockerfile belowe in ."
           find . -name "Dockerfile" -type f
+          /bin/pwd
+          ls -l /bin/pwd
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/techwarehouse:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/techwarehouse:latest
         # uses: docker/build-push-action@v5
