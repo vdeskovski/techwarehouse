@@ -10,7 +10,7 @@ services:
     volumes:
        - database:/var/lib/postgresql/data
   spring-boot-app:
-    image: vdeskovski/test:2.0
+    image: vdeskovski/techwarehouse:latest
     ports:
       - "8080:8080"
     env_file:
