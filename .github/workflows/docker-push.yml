@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "the path is BELOW!!!"
           pwd
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/techwarehouse:latest -f ./Dockerfile .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/techwarehouse:latest -f ../Dockerfile .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/techwarehouse:latest
         # uses: docker/build-push-action@v5
         # with:
