@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ConfigMap #
+metadata:
+  name: cm-db
+  namespace: devops
+data:
+  POSTGRES_DB: "techshopDb"
+  POSTGRES_USER: "postgres"
+---
+apiVersion: v1
+kind: Secret #
+metadata:
+  name: secret-db
+  namespace: devops
+data:
+  POSTGRES_PASSWORD: MTIzNA==
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass #
+metadata:
+  name: sc-db
+  namespace: devops
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp2
+  fsType: ext4
+---
+kind: PersistentVolumeClaim #
+apiVersion: v1
+metadata:
+  name: pvc-db
+  namespace: devops
+  labels:
+    app: database
+spec:
+  storageClassName: sc-db
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet #
+metadata:
+  name: ss-db
+  namespace: devops
+spec:
+  selector:
+    matchLabels:
+      app: database
+  serviceName: "svc-db"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-db
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: cm-db
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: cm-db
+                  key: POSTGRES_USER
+          volumeMounts:
+            - name: db-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: db-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: sc-db
+      resources:
+        requests:
+          storage: 2Gi
+---
+apiVersion: v1
+kind: Service #
+metadata:
+  name: svc-db
+  namespace: devops
+spec:
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+      name: database
+  selector:
+    app: database
+
