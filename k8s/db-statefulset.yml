@@ -14,23 +14,8 @@ metadata:
   namespace: devops
 data:
   POSTGRES_PASSWORD: MTIzNA==
-#---
-#kind: PersistentVolume
-#apiVersion: v1
-#metadata:
-#  name: db-pv
-#  namespace: devops
-#spec:
-#  storageClassName: manual
-#  capacity:
-#    storage: 1Gi
-#  accessModes:
-#    - ReadWriteOnce
-#  hostPath:
-#    path: "/mnt/data"
-#  persistentVolumeReclaimPolicy: Retain
 ---
-kind: PersistentVolumeClaim
+kind: PersistentVolumeClaim #
 apiVersion: v1
 metadata:
   name: db-pvc
@@ -86,15 +71,6 @@ spec:
         - name: db-storage
           persistentVolumeClaim:
             claimName: db-pvc
-#  volumeClaimTemplates:
-#    - metadata:
-#        name: db-storage
-#      spec:
-#        accessModes: ["ReadWriteOnce"]
-#        storageClassName: sc-db
-#        resources:
-#          requests:
-#            storage: 1Gi
 ---
 apiVersion: v1
 kind: Service #
