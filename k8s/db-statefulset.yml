@@ -52,7 +52,7 @@ spec:
     matchLabels:
       app: database
   serviceName: "svc-db"
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
