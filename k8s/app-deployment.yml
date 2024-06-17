@@ -5,10 +5,7 @@ metadata:
   namespace: devops
 data:
   POSTGRES_DB: "techshopDb"
-  #POSTGRES_URL: "jdbc:postgresql://postgres:5432/techshopDb"
   POSTGRES_URL: "jdbc:postgresql://svc-db.devops.svc.cluster.local:5432/techshopDb"
-  #POSTGRES_URL: "jdbc:postgresql://postgres:5432/techshopDb"
-  #POSTGRES_URL: "jdbc:postgresql://svc-db:5432/techshopDb"
   POSTGRES_USER: "postgres"
 ---
 apiVersion: v1

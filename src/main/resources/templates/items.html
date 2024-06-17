@@ -24,7 +24,7 @@
         <tbody>
         <tr th:each="i : ${items}">
             <td th:text="${i.getName()}"></td>
-            <td th:text="${i.getPrice()}"></td>
+            <td th:text="'€ ' + ${i.getPrice()}"></td>
             <td th:text="${i.getQuantity()}"></td>
             <td th:text="${i.getCategory()}"></td>
             <td th:text="${i.getManufacturer().getName()}"></td>

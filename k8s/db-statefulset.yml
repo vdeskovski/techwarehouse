@@ -14,31 +14,33 @@ metadata:
   namespace: devops
 data:
   POSTGRES_PASSWORD: MTIzNA==
+#---
+#kind: PersistentVolume
+#apiVersion: v1
+#metadata:
+#  name: db-pv
+#  namespace: devops
+#spec:
+#  storageClassName: manual
+#  capacity:
+#    storage: 1Gi
+#  accessModes:
+#    - ReadWriteOnce
+#  hostPath:
+#    path: "/mnt/data"
+#  persistentVolumeReclaimPolicy: Retain
 ---
-apiVersion: storage.k8s.io/v1
-kind: StorageClass #
-metadata:
-  name: sc-db
-  namespace: devops
-provisioner: ebs.csi.aws.com
-parameters:
-  type: gp2
-  fsType: ext4
----
-kind: PersistentVolumeClaim #
+kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: pvc-db
+  name: db-pvc
   namespace: devops
-  labels:
-    app: database
 spec:
-  storageClassName: sc-db
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: StatefulSet #
@@ -80,15 +82,19 @@ spec:
           volumeMounts:
             - name: db-storage
               mountPath: /var/lib/postgresql/data
-  volumeClaimTemplates:
-  - metadata:
-      name: db-storage
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: sc-db
-      resources:
-        requests:
-          storage: 2Gi
+      volumes:
+        - name: db-storage
+          persistentVolumeClaim:
+            claimName: db-pvc
+#  volumeClaimTemplates:
+#    - metadata:
+#        name: db-storage
+#      spec:
+#        accessModes: ["ReadWriteOnce"]
+#        storageClassName: sc-db
+#        resources:
+#          requests:
+#            storage: 1Gi
 ---
 apiVersion: v1
 kind: Service #
