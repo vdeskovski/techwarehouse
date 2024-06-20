@@ -7,6 +7,7 @@ data:
   POSTGRES_DB: "techshopDb"
   POSTGRES_URL: "jdbc:postgresql://svc-db.devops.svc.cluster.local:5432/techshopDb"
   POSTGRES_USER: "postgres"
+  SPRING_PROFILES_ACTIVE: "prod,prod-k8s"
 ---
 apiVersion: v1
 kind: Secret #
@@ -57,6 +58,11 @@ spec:
                 configMapKeyRef:
                   name: cm-app
                   key: POSTGRES_URL
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: cm-app
+                  key: SPRING_PROFILES_ACTIVE
 ---
 apiVersion: v1
 kind: Service #
