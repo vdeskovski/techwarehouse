@@ -35,6 +35,7 @@ spec:
       containers:
         - name: java-sb-container
           image: vdeskovski/techwarehouse:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
