@@ -1,23 +1,26 @@
 package mk.ukim.finki.techshop.service.impl;
 
+import jakarta.transaction.Transactional;
 import mk.ukim.finki.techshop.model.Manufacturer;
 import mk.ukim.finki.techshop.model.dto.ManufacturerDTO;
 import mk.ukim.finki.techshop.model.exception.ManufacturerIdNotFoundException;
+import mk.ukim.finki.techshop.repo.ItemRepo;
 import mk.ukim.finki.techshop.repo.ManufacturerRepo;
 import mk.ukim.finki.techshop.service.ManufacturerService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
     private final ManufacturerRepo manufacturerRepo;
+    private final ItemRepo itemRepo;
 
-    public ManufacturerServiceImpl(ManufacturerRepo manufacturerRepo) {
+    public ManufacturerServiceImpl(ManufacturerRepo manufacturerRepo, ItemRepo itemRepo) {
         this.manufacturerRepo = manufacturerRepo;
+        this.itemRepo = itemRepo;
     }
 
     @Override
@@ -52,10 +55,11 @@ public class ManufacturerServiceImpl implements ManufacturerService {
         return Optional.of(manufacturerRepo.save(manufacturer));
     }
 
+    @Transactional
     @Override
     public Optional<Manufacturer> deleteById(Long id) {
         Manufacturer manufacturer = findById(id).orElseThrow(ManufacturerIdNotFoundException::new);
-        //manufacturerRepo.delete(manufacturer);
+        itemRepo.deleteByManufacturerId(id);
         manufacturerRepo.deleteById(id);
         return Optional.of(manufacturer);
     }
