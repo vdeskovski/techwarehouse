@@ -1,5 +1,5 @@
 # techWarehouse
-DevOps Project.
+DevOps Project
 
 # Run in a Docker environment:
 Navigate to the project's folder and run ```docker-compose up -d``` to orchestrate the application.
